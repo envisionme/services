@@ -348,7 +348,7 @@ function _services_sessions_authenticate_call() {
   }
   //For every callback that has nothing to do with login we need to
   //set it to the original user so that they are no longer anonymous
-  
+
   if (strpos($arg[1]['callback'], 'login') === FALSE) {
     // The account should be restored to the session's user.
     $user = $original_user;
@@ -533,7 +533,7 @@ function services_resource_build_index_query($schema, $order, $page, $fields, $s
         $query_params[] = $single_value;
       }
       $where[] = $primary_table . '.' . $param_field . ' IN (' . implode(',', $in_placeholders) . ')';
-    } 
+    }
   }
 
   // Now implode that array into an actual WHERE clause.
@@ -608,10 +608,21 @@ function services_resource_build_index_list($results, $type, $field) {
  *    Object user object.
  */
 function services_remove_user_data(&$account) {
+  global $user;
+
   // Remove the users password from the account object.
   unset($account->pass);
-  if (!user_access('administer users')) {
+
+  // Remove the user mail, if current user don't have "administer users"
+  // permission, and the requested account not match the current user.
+  if (!user_access('administer users') && $account->uid !== $user->uid) {
     unset($account->mail);
+    unset($account->init);
+  }
+
+  // Remove the user init, if current user don't have "administer users"
+  //permission.
+  if (!user_access('administer users')) {
     unset($account->init);
   }
   drupal_alter('services_account_object', $account);

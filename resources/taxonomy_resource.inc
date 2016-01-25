@@ -448,7 +448,6 @@ function _taxonomy_term_resource_create($term) {
 function _taxonomy_term_resource_update($tid, $term) {
   // Adds backwards compatability with regression fixed in #1083242
   $term = _services_arg_value($term, 'term');
-
   $term['tid'] = $tid;
   return _taxonomy_term_resource_create($term);
 }
@@ -600,4 +599,3 @@ function _taxonomy_resource_access($op = 'view', $args = array()) {
   }
   // TODO - check perms of user to return ability to interact with terms / vocabulary
 }
-

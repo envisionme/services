@@ -95,7 +95,7 @@ function _system_resource_connect() {
   $return->sessid = session_id();
 
   services_remove_user_data($user);
-  
+
   $return->user = $user;
 
   return $return;
