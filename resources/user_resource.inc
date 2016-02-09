@@ -398,6 +398,20 @@ function _user_resource_login($username, $password) {
     return $return;
   }
   session_destroy();
+
+  // Trigger login sercurity module to check for brute force attacks.
+  if (module_exists('login_security')) {
+    // Null username should not be tracked
+    if (!strlen($username)) {
+      return;
+    }
+
+    $form_state = array();
+    $form_state['values'] = array('name' => $username, 'pass' => $password);
+
+    drupal_execute('user_login_block', $form_state);
+  }
+
   return services_error(t('Wrong username or password.'), 401);
 }
 
